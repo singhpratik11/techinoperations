@@ -37,6 +37,8 @@ type Props = {
   vanish?: number[] // middle-row slots that sell out during the build
   vanished?: boolean
   vanishDelay?: number
+  refill?: number[] // middle-row slots that are restocked during the build
+  refillDelay?: number
   low?: number[] // bottom-row slots running low
   boxes?: ShelfBox[]
   className?: string
@@ -58,6 +60,8 @@ export default function Shelf({
   vanish = [],
   vanished = false,
   vanishDelay = 0,
+  refill = [],
+  refillDelay = 0,
   low = [],
   boxes = [],
   className,
@@ -75,6 +79,8 @@ export default function Shelf({
             if (row === 1 && empty.includes(col)) return null
             const h = height(row, col, low)
             const gone = row === 1 && vanish.includes(col) && vanished
+            const back = row === 1 && refill.includes(col)
+            const tint = TINT[(col + row * 5) % COLS]
             return (
               <motion.rect
                 key={col}
@@ -84,9 +90,13 @@ export default function Shelf({
                 height={h}
                 rx={3}
                 fill={color}
-                initial={instant ? false : { opacity: TINT[(col + row * 5) % COLS] }}
-                animate={{ opacity: gone ? 0 : TINT[(col + row * 5) % COLS] }}
-                transition={tr(instant, 0.5, gone ? vanishDelay + (col - vanish[0]) * 0.35 : 0)}
+                initial={instant ? false : { opacity: back ? 0 : tint }}
+                animate={{ opacity: gone ? 0 : tint }}
+                transition={tr(
+                  instant,
+                  0.5,
+                  gone ? vanishDelay + (col - vanish[0]) * 0.35 : back ? refillDelay + (col - refill[0]) * 0.35 : 0,
+                )}
               />
             )
           })}
