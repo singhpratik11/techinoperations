@@ -19,9 +19,10 @@ export default function Title({ instant, enter }: ScreenProps) {
           {title.subheading}
         </motion.p>
       </div>
-      <motion.p {...reveal(instant, enter + 0.5)} className="absolute bottom-[34px] left-[120px] m-0 font-sans text-[20px] text-sea/80">
-        {title.byline}
-      </motion.p>
+      <motion.div {...reveal(instant, enter + 0.5)} className="absolute bottom-[34px] left-[120px] font-sans">
+        <p className="m-0 text-[24px] text-white">{title.team.join(', ')}</p>
+        <p className="mt-2 mb-0 text-[20px] text-sea/80">{title.course}</p>
+      </motion.div>
       <Shelf
         className="absolute top-[170px] left-[800px] w-[700px]"
         color="#9CC5B8"
