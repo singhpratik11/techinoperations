@@ -43,13 +43,14 @@ export default function Deck() {
     buildEnds.current = performance.now() + offset + ms
   }, [pos.screen, pos.step, pos.settle, pos.fast, instant])
 
-  // Fast-forward: play each remaining build quickly, one after another, to the end of the screen.
+  // Fast-forward: the build in progress snaps to its end (no replay), then each remaining
+  // build plays quickly, one after another, to the end of the screen.
   useEffect(() => {
-    if (!pos.fast || instant || pos.step >= screens[pos.screen].steps) return
-    const wait = Math.max(140, (screens[pos.screen].buildMs[pos.step] ?? 0) * FAST_PACE)
-    const t = setTimeout(() => setPos((p) => (p.fast ? { ...p, step: p.step + 1 } : p)), wait)
+    if (!pos.fast || pos.step >= screens[pos.screen].steps) return
+    const wait = pos.instant ? 120 : Math.max(140, (screens[pos.screen].buildMs[pos.step] ?? 0) * FAST_PACE)
+    const t = setTimeout(() => setPos((p) => (p.fast ? { ...p, step: p.step + 1, instant: false } : p)), wait)
     return () => clearTimeout(t)
-  }, [pos.fast, pos.step, pos.screen, pos.settle, instant])
+  }, [pos.fast, pos.step, pos.screen, pos.settle, pos.instant])
 
   const next = useCallback(() => {
     // Decide outside the state updater: updaters must stay pure.
@@ -60,7 +61,7 @@ export default function Deck() {
       // A third press while fast-forwarding: show the end of the screen at once.
       if (p.fast && (building || p.step < s.steps)) return { ...p, step: s.steps, instant: true, settle: p.settle + 1, fast: false }
       // A second press while a build plays: run through the rest of the screen quickly.
-      if (building) return { ...p, instant: false, settle: p.settle + 1, fast: true }
+      if (building) return { ...p, instant: true, settle: p.settle + 1, fast: true }
       if (p.step < s.steps) return { ...p, step: p.step + 1, instant: false, fast: false }
       if (p.screen < screens.length - 1) return { screen: p.screen + 1, step: 0, instant: false, settle: 0, dir: 1, fast: false }
       return { ...p, fast: false }
@@ -209,19 +210,18 @@ export default function Deck() {
           </div>
         </div>
       </div>
-      {!presenting && (
-        <Controls
-          canBack={pos.screen > 0 || pos.step > 0}
-          canNext={pos.screen < screens.length - 1 || pos.step < current.steps}
-          atStart={pos.screen === 0}
-          atEnd={pos.screen === screens.length - 1}
-          onPrev={prev}
-          onNext={next}
-          onTop={() => jump(0)}
-          onEnd={() => jump(screens.length - 1)}
-          onPresent={togglePresenting}
-        />
-      )}
+      <Controls
+        presenting={presenting}
+        canBack={pos.screen > 0 || pos.step > 0}
+        canNext={pos.screen < screens.length - 1 || pos.step < current.steps}
+        atStart={pos.screen === 0}
+        atEnd={pos.screen === screens.length - 1}
+        onPrev={prev}
+        onNext={next}
+        onTop={() => jump(0)}
+        onEnd={() => jump(screens.length - 1)}
+        onPresent={togglePresenting}
+      />
       {notes && (
         <div className="h-[30%] shrink-0 overflow-y-auto border-t border-hair bg-white px-10 py-6">
           <p className="max-w-[1100px] font-sans text-[18px] leading-[1.6] text-ink">{current.notes}</p>
@@ -232,6 +232,7 @@ export default function Deck() {
 }
 
 type ControlsProps = {
+  presenting: boolean
   canBack: boolean
   canNext: boolean
   atStart: boolean
@@ -243,33 +244,79 @@ type ControlsProps = {
   onPresent: () => void
 }
 
-function Controls({ canBack, canNext, atStart, atEnd, onPrev, onNext, onTop, onEnd, onPresent }: ControlsProps) {
+// 24×24 stroke icons, drawn in currentColor.
+const ICONS = {
+  top: 'M6 5v14 M18 6l-6 6 6 6',
+  prev: 'M15 6l-6 6 6 6',
+  next: 'M9 6l6 6-6 6',
+  end: 'M18 5v14 M6 6l6 6-6 6',
+  enter: 'M4 9V4h5 M20 9V4h-5 M4 15v5h5 M20 15v5h-5',
+  exit: 'M9 4v5H4 M15 4v5h5 M9 20v-5H4 M15 20v-5h5',
+}
+
+function Controls({ presenting, canBack, canNext, atStart, atEnd, onPrev, onNext, onTop, onEnd, onPresent }: ControlsProps) {
+  // In presentation mode the controls float over the slide and fade out after the mouse rests.
+  const [idle, setIdle] = useState(false)
+  useEffect(() => {
+    if (!presenting) {
+      setIdle(false)
+      return
+    }
+    let t = setTimeout(() => setIdle(true), 2500)
+    const wake = () => {
+      setIdle(false)
+      clearTimeout(t)
+      t = setTimeout(() => setIdle(true), 2500)
+    }
+    window.addEventListener('mousemove', wake)
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('mousemove', wake)
+    }
+  }, [presenting])
+
   const buttons = [
-    { label: 'Jump to top', onClick: onTop, disabled: atStart },
-    { label: '← Previous slide', onClick: onPrev, disabled: !canBack },
-    { label: 'Next slide →', onClick: onNext, disabled: !canNext, primary: true },
-    { label: 'Jump to end', onClick: onEnd, disabled: atEnd },
-    { label: 'Presentation mode', onClick: onPresent },
+    { label: 'Jump to top', icon: ICONS.top, onClick: onTop, disabled: atStart },
+    { label: 'Previous slide', icon: ICONS.prev, onClick: onPrev, disabled: !canBack },
+    { label: 'Next slide', icon: ICONS.next, onClick: onNext, disabled: !canNext, primary: true },
+    { label: 'Jump to end', icon: ICONS.end, onClick: onEnd, disabled: atEnd },
+    {
+      label: presenting ? 'Leave presentation mode' : 'Presentation mode',
+      icon: presenting ? ICONS.exit : ICONS.enter,
+      onClick: onPresent,
+    },
   ]
-  return (
-    <div className="flex h-14 shrink-0 items-center justify-center gap-2 border-t border-hair bg-white px-4">
-      {buttons.map((b) => (
-        <button
-          key={b.label}
-          type="button"
-          disabled={b.disabled}
-          // Keep focus off the button so Space and arrows stay deck keys, never a second click.
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={b.onClick}
-          className={`cursor-pointer rounded-md border px-3.5 py-1.5 font-sans text-[14px] transition-colors disabled:cursor-default disabled:opacity-35 ${
-            b.primary
-              ? 'border-teal bg-teal text-white enabled:hover:bg-[#0E4D5D]'
-              : 'border-hair bg-white text-ink enabled:hover:bg-[#F2F5F6]'
-          }`}
-        >
-          {b.label}
-        </button>
-      ))}
-    </div>
-  )
+  const row = buttons.map((b) => (
+    <button
+      key={b.icon}
+      type="button"
+      title={b.label}
+      aria-label={b.label}
+      disabled={b.disabled}
+      // Keep focus off the button so Space and arrows stay deck keys, never a second click.
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={b.onClick}
+      className={`grid h-10 w-10 cursor-pointer place-items-center rounded-full transition-colors disabled:cursor-default disabled:opacity-30 ${
+        b.primary ? 'bg-teal text-white enabled:hover:bg-[#0E4D5D]' : 'text-ink enabled:hover:bg-[#EDF1F2]'
+      }`}
+    >
+      <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d={b.icon} />
+      </svg>
+    </button>
+  ))
+
+  if (presenting) {
+    return (
+      <div
+        className={`fixed bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-full border border-hair bg-white/92 p-1 transition-opacity duration-300 ${
+          idle ? 'pointer-events-none opacity-0' : 'opacity-100'
+        }`}
+      >
+        {row}
+        {idle && <style>{'body { cursor: none; }'}</style>}
+      </div>
+    )
+  }
+  return <div className="flex h-14 shrink-0 items-center justify-center gap-1 border-t border-hair bg-white px-4">{row}</div>
 }
