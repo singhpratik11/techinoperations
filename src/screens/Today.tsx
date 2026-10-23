@@ -7,8 +7,8 @@ import { today } from '../content'
 import { reveal, tr, type ScreenProps } from '../motion'
 
 // 1: the empty-shelf bar grows in real proportion (1 s per hour) with a clock.
-// 2: the patrol marker. 3: the phantom-stock stretch. 4: the 65%.
-export const buildMs = [900, 3200, 1100, 1900, 1100]
+// 2: the patrol marker. 3: the phantom-stock stretch. 4: the 65%. 5: the 31% who leave.
+export const buildMs = [900, 3200, 1100, 1900, 1100, 1100]
 const GROW = today.noticedAtHours // seconds: 1 second per hour on the axis
 
 const clock = (h: number) => {
@@ -89,9 +89,15 @@ export default function Today({ step, instant, enter }: ScreenProps) {
       )}
 
       {step >= 4 && (
-        <motion.div {...reveal(instant)} className="absolute top-[570px] left-[120px] flex items-center gap-9">
-          <span className="font-serif text-[150px] leading-none font-normal tracking-[-0.02em] text-bad">{today.bigNumber}</span>
-          <span className="max-w-[560px] font-sans text-[26px] leading-[1.4] text-ink">{today.bigNumberText}</span>
+        <motion.div {...reveal(instant)} className="absolute top-[580px] left-[120px] flex items-center gap-7">
+          <span className="font-serif text-[132px] leading-none tracking-[-0.02em] text-bad">{today.bigNumber}</span>
+          <span className="w-[400px] font-sans text-[24px] leading-[1.4] text-ink">{today.bigNumberText}</span>
+        </motion.div>
+      )}
+      {step >= 5 && (
+        <motion.div {...reveal(instant)} className="absolute top-[580px] left-[860px] flex items-center gap-7">
+          <span className="font-serif text-[132px] leading-none tracking-[-0.02em] text-bad">{today.secondNumber}</span>
+          <span className="w-[340px] font-sans text-[24px] leading-[1.4] text-ink">{today.secondNumberText}</span>
         </motion.div>
       )}
 
