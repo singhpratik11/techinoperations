@@ -4,7 +4,7 @@ import Headline from '../components/Headline'
 import Source from '../components/Source'
 import TimeAxis, { AX0, AXIS_Y, BAR_H, BAR_Y, hx } from '../components/TimeAxis'
 import { today } from '../content'
-import { reveal, tr, type ScreenProps } from '../motion'
+import { pace, reveal, tr, type ScreenProps } from '../motion'
 
 // 1: the empty-shelf bar grows in real proportion (1 s per hour) with a clock.
 // 2: the patrol marker. 3: the phantom-stock stretch. 4: the 65%. 5: the 31% who leave.
@@ -27,7 +27,7 @@ export default function Today({ step, instant, enter }: ScreenProps) {
   useEffect(() => {
     if (!grown) return hours.set(0)
     if (instant) return hours.set(end)
-    const c = animate(hours, end, { duration: GROW, ease: 'linear' })
+    const c = animate(hours, end, { duration: GROW * pace.factor, ease: 'linear' })
     return () => c.stop()
   }, [grown, instant, end, hours])
 

@@ -16,8 +16,24 @@ export type ScreenProps = {
 
 export const ease = [0.37, 0, 0.63, 1] as const // sine in-out: calm, no overshoot
 
+// Every duration and delay in the deck is multiplied by the current pace.
+// Normal builds run at BASE_PACE; a fast-forward through a slide runs at FAST_PACE.
+export const BASE_PACE = 0.6
+export const FAST_PACE = 0.18
+export const pace = { factor: BASE_PACE }
+
+type Timed = { duration?: number; delay?: number }
+function scaled<T extends Timed>(t: T, k: number): T {
+  return { ...t, ...(t.duration !== undefined && { duration: t.duration * k }), ...(t.delay !== undefined && { delay: t.delay * k }) }
+}
+
 export function tr(instant: boolean, duration: number, delay = 0, extra: Transition = {}): Transition {
-  return instant ? { duration: 0 } : { duration, delay, ease, ...extra }
+  if (instant) return { duration: 0 }
+  const k = pace.factor
+  const perProp = Object.fromEntries(
+    Object.entries(extra).map(([key, v]) => [key, v && typeof v === 'object' && !Array.isArray(v) ? scaled(v as Timed, k) : v]),
+  )
+  return { duration: duration * k, delay: delay * k, ease, ...perProp }
 }
 
 // Fade-and-settle used for text reveals.
