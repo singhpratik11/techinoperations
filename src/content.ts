@@ -14,6 +14,13 @@ export const title = {
 
 export const technology = {
   headline: 'A camera that can tell when a shelf is empty',
+  industry: {
+    lead: 'Indian grocery keeps about 5 rupees of every 100 it sells.',
+    revenueCr: 57790,
+    profitCr: 2927,
+    caption: (profit: string, revenue: string, pct: string) => `₹${profit} of ₹${revenue} crore kept as profit, ${pct} (DMart, FY25)`,
+  },
+  source: 'DMart FY25 results via Angel One; Yilmazer & Birant (2021), SOSA; NVIDIA Jetson Orin Nano, $249 (Phoronix).',
   tags: {
     stocked: 'stocked 97%',
     empty: 'empty 94%',
@@ -89,12 +96,14 @@ export const stakeholders = {
   columns: ['What they gain', 'Condition for a win'],
   rows: [
     { label: 'Retailer', gain: 'recovered sales, accurate records, brand revenue', condition: 'start on fast-moving aisles, reuse existing CCTV' },
-    { label: 'Employees', gain: 'less searching, clearer tasks, a share of the gains', condition: 'footage is never used for discipline' },
+    { label: 'Employees', gain: 'cameras do the looking, people the doing', condition: 'footage is never used for discipline' },
     { label: 'Shoppers', gain: 'items on the shelf, shorter queues', condition: 'counts, not faces; clear signage' },
     { label: 'Brands', gain: 'fewer lost sales, proof their products are on the shelf', condition: 'pay for measured results, not flat fees' },
   ],
+  roles:
+    "Auditor roles shrink; associates get tasks with location and quantity; merchandisers move from checking shelves to fixing them. Lowe's freed 80 staff hours per store a week and paid $5,000 bonuses from the gains.",
   closing: 'It only works for everyone if the cameras watch shelves, not people.',
-  source: "Table D2. Brand losses: Gruen & Corsten via Drug Store News. Privacy: India's DPDP Act, 2023.",
+  source: "Tables D1 and D2; Lowe's via AI News. Brand losses: Gruen & Corsten via Drug Store News. Privacy: India's DPDP Act, 2023.",
   notes:
     "Is win-win-win-win possible? Yes, under two conditions: the gains are shared, and the cameras watch shelves rather than people. The retailer gains sales, accurate records and brand revenue. Employees lose drudgery and share bonuses. Shoppers find items and wait less, provided the system stores counts, not faces, which also keeps it within India's Digital Personal Data Protection Act, 2023. Brands are the least obvious winner and the most important for a thin-margin chain: out-of-stocks cost manufacturers about $23 million per $1 billion of sales, so a brand already paying for slotting and field merchandisers has reason to pay for proof that its products are on the shelf. On jobs: the cameras automate the looking and augment the doing. Auditor roles shrink; associates get tasks with location and quantity; merchandisers shift from checking shelves to fixing them. Lowe's freed 80 hours of staff time per store a week and paid store managers $5,000 bonuses from the gains. And the future: once every shelf is measured, the shelf can be sold. Onsite retail media earns about 70% gross margins against a 5% net margin on groceries, and Indian retail media, about ₹24,280 crore in 2025, is almost all online today.",
 }
@@ -106,7 +115,18 @@ export const littlesLaw = {
     { symbol: 'R', name: 'Throughput rate', before: '', after: 'more sold per shelf-hour', extra: 'lanes open on measured queues' },
     { symbol: 'T', name: 'Throughput time', before: 'about 2.5 hours', after: 'about 30 minutes', extra: '' },
   ],
-  source: 'Table B1. Timings assume a 14-hour trading day; 5% less safety stock is our assumption.',
+  evidence: {
+    lead: 'The research shows large effects; our model assumes a small one.',
+    axis: [0, 10, 20, 30],
+    rows: [
+      { text: 'Accuracy: one stocktake at a UK grocer', lo: 11.2, hi: 11.2, label: '+11.2% sales' },
+      { text: 'Speed: shelf scanning at Schnucks', lo: 20, hi: 30, label: '20–30% fewer out-of-stocks' },
+      { text: 'People: one associate recovering stock', lo: 22.4, hi: 22.7, label: '+22.4–22.7% sales' },
+    ],
+    ours: { text: 'Our base case', lo: 1, hi: 1, label: 'about 1% of sales recovered' },
+  },
+  source:
+    'Table B1; timings assume a 14-hour day. Rekik et al. (2025), one store pair; Schnucks via NACS (2021), company-reported; Lee, Kesavan & Deshpande (2021).',
   notes:
     "In this course's terms. Throughput time for the replenishment cycle, shelf empty to refilled, falls from about 2.5 hours to about 30 minutes, and a frozen record now corrects at the next scan instead of the next stock count. Throughput rate rises in two places: units sold per shelf-hour, because fewer hours are lost to empty shelves, about 1% of sales in our base case; and shoppers served per peak hour, because lanes open on measured queues. Assets move both ways. By Little's Law, inventory equals throughput rate times throughput time, so a shorter, more reliable cycle holds the same availability with less safety stock; we assume 5% less. Fixed assets rise by about ₹7 lakh per store for cameras, edge devices and installation.",
 }
@@ -128,10 +148,14 @@ export const businessCase = {
   paragraphs: [
     'For a store selling ₹100 crore a year, the system costs about ₹8.8 lakh a year.',
     'Even with no money from brands and a smaller drop in stockouts, the store still comes out ahead.',
-    'We would start with five stores and compare them against five without cameras.',
   ],
+  rollout: [
+    { kind: 'step', text: 'Pilot five stores against five matched ones for three months.' },
+    { kind: 'gate', text: 'Scale only if out-of-stock hours fall at least 15%.' },
+    { kind: 'step', text: 'Then sell shelf data and in-store media to brands: about 70% gross margin, against 5% net on groceries.' },
+  ] as { kind: 'step' | 'gate'; text: string }[],
   source:
-    'Our model: stockouts cut 25%, 15% gross margin; costs are our estimates as vendors do not publish prices. Details in the report.',
+    'Our model: stockouts cut 25%, 15% gross margin; costs are our estimates as vendors do not publish prices. Retail media margin: Coresight via BW Marketing World.',
   notes:
     'Does it pay on a thin margin? The system costs ₹7 lakh of capex written off over three years plus ₹6.5 lakh a year to run. A store selling ₹100 crore keeps about ₹5 crore as profit. The system costs about ₹8.8 lakh a year. The biggest gain is recovered sales: cutting stockouts by a quarter brings back ₹15 lakh of gross profit. Add lower shrink, less safety stock, freed staff time and some brand money, and the store nets about ₹23 lakh a year, 4.6% more profit, with capex back in about three months. Even in the cautious case it still makes ₹3.2 lakh. Rollout: a five-store pilot against five matched stores, scale only if empty-shelf hours fall at least 15%, then sell shelf data and media to brands in year two. Across 400 such stores the base case is worth about ₹93 crore a year. The trap is over-automating: Amazon pulled Just Walk Out from its US Fresh grocery stores in 2024, so we keep people in charge and use cameras to direct them.',
 }

@@ -4,8 +4,8 @@ import Source from '../components/Source'
 import { businessCase as bc } from '../content'
 import { reveal, tr, type ScreenProps } from '../motion'
 
-// Steps 1–7 build the waterfall bar by bar; step 8 brings in the rest of the argument.
-export const buildMs = [900, 900, 900, 900, 900, 900, 900, 900, 900]
+// Steps 1–7 build the waterfall bar by bar; 8: it pays even in the cautious case; 9: how we would roll it out.
+export const buildMs = [900, 900, 900, 900, 900, 900, 900, 900, 900, 1200]
 
 const round1 = (v: number) => Math.round(v * 10) / 10
 const signed = (v: number) => (v > 0 ? `+${v.toFixed(1)}` : v < 0 ? `−${Math.abs(v).toFixed(1)}` : '0')
@@ -128,19 +128,27 @@ export default function BusinessCase({ step, instant, enter, scenario, setScenar
         </motion.div>
       )}
 
-      <div className="absolute top-[280px] left-[1120px] w-[360px] font-sans text-[24px] leading-[1.42]">
-        <motion.p {...reveal(instant, enter + 0.3)} className="mt-0 mb-8 text-ink">
+      <div className="absolute top-[236px] left-[1120px] w-[360px] font-sans text-[22px] leading-[1.36]">
+        <motion.p {...reveal(instant, enter + 0.3)} className="mt-0 mb-5 text-ink">
           {bc.paragraphs[0]}
         </motion.p>
         {step >= 8 && (
-          <>
-            <motion.p {...reveal(instant)} className="mt-0 mb-8 font-semibold text-teal">
-              {bc.paragraphs[1]}
-            </motion.p>
-            <motion.p {...reveal(instant, 0.4)} className="m-0 text-ink">
-              {bc.paragraphs[2]}
-            </motion.p>
-          </>
+          <motion.p {...reveal(instant)} className="mt-0 mb-5 font-semibold text-teal">
+            {bc.paragraphs[1]}
+          </motion.p>
+        )}
+        {step >= 9 && (
+          // The gated rollout: a step, a gate it must pass, then brand money as upside.
+          <div className="border-t border-hair pt-4">
+            {bc.rollout.map((r, i) => (
+              <motion.div key={i} {...reveal(instant, i * 0.35)} className="relative mb-3 pl-7 text-[21px] leading-snug">
+                <span
+                  className={`absolute top-[7px] left-0 ${r.kind === 'gate' ? 'h-[18px] w-[4px] rounded-full bg-warn' : 'h-[14px] w-[14px] rounded-full bg-teal'}`}
+                />
+                <span className="text-ink">{r.text}</span>
+              </motion.div>
+            ))}
+          </div>
         )}
       </div>
 
