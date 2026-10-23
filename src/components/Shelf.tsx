@@ -71,8 +71,8 @@ export default function Shelf({
       {BOARDS.map((by, row) => (
         <motion.g
           key={row}
-          initial={instant ? false : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={instant ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={tr(instant, 0.7, enter + row * 0.45)}
         >
           {HEIGHTS[row].map((_, col) => {

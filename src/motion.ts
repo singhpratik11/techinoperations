@@ -36,11 +36,11 @@ export function tr(instant: boolean, duration: number, delay = 0, extra: Transit
   return { duration: duration * k, delay: delay * k, ease, ...perProp }
 }
 
-// Fade-and-settle used for text reveals.
+// Fade used for text reveals. Opacity only: moving text inside the scaled stage shimmers.
 export function reveal(instant: boolean, delay = 0) {
   return {
-    initial: instant ? false : { opacity: 0, y: 12 },
-    animate: { opacity: 1, y: 0 },
+    initial: instant ? false : { opacity: 0 },
+    animate: { opacity: 1 },
     transition: tr(instant, 0.6, delay),
   } as const
 }

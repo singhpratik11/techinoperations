@@ -50,8 +50,8 @@ export default function Technology({ step, instant, enter }: ScreenProps) {
           step > i ? (
             <motion.p
               key={i}
-              initial={instant ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0, color: step === i + 1 ? '#1B2A2F' : '#5B7B83' }}
+              initial={instant ? false : { opacity: 0 }}
+              animate={{ opacity: 1, color: step === i + 1 ? '#1B2A2F' : '#5B7B83' }}
               transition={tr(instant, 0.6, step === i + 1 ? 0.5 : 0)}
               className="mt-0 mb-5 font-sans text-[23px] leading-[1.4]"
             >

@@ -19,8 +19,9 @@ const clock = (h: number) => {
 export default function Today({ step, instant, enter }: ScreenProps) {
   const end = today.noticedAtHours
   const hours = useMotionValue(step >= 1 && instant ? end : 0)
-  const width = useTransform(hours, (h) => hx(h) - AX0)
-  const left = useTransform(hours, (h) => hx(h))
+  const mx = hx(end)
+  const grow = useTransform(hours, (h) => h / end)
+  const clockX = useTransform(hours, (h) => hx(h) - AX0)
   const label = useTransform(hours, clock)
 
   const grown = step >= 1
@@ -31,7 +32,6 @@ export default function Today({ step, instant, enter }: ScreenProps) {
     return () => c.stop()
   }, [grown, instant, end, hours])
 
-  const mx = hx(end)
   return (
     <div className="absolute inset-0">
       <Headline text={today.headline} instant={instant} enter={enter} />
@@ -39,12 +39,14 @@ export default function Today({ step, instant, enter }: ScreenProps) {
 
       {step >= 1 && (
         <>
-          <motion.div className="absolute bg-bad" style={{ left: AX0, top: BAR_Y, height: BAR_H, width }} />
           <motion.div
-            className="absolute font-mono text-[24px] font-medium text-bad tabular-nums"
-            style={{ left, top: BAR_Y - 44, x: '-100%', paddingRight: 14 }}
-          >
-            {label}
+            className="absolute origin-left bg-bad"
+            style={{ left: AX0, top: BAR_Y, height: BAR_H, width: mx - AX0, scaleX: grow }}
+          />
+          <motion.div className="absolute" style={{ left: AX0, top: BAR_Y - 44, x: clockX }}>
+            <motion.span className="absolute right-0 pr-[14px] font-mono text-[24px] font-medium whitespace-nowrap text-bad tabular-nums">
+              {label}
+            </motion.span>
           </motion.div>
           <motion.div
             initial={instant ? false : { opacity: 0 }}
