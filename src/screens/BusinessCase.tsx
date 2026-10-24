@@ -125,6 +125,12 @@ export default function BusinessCase({ step, instant, enter, scenario, setScenar
               </button>
             </span>
           ))}
+          <span className="ml-6 border-l border-hair pl-6 text-muted">
+            {bc.stockoutLabel}{' '}
+            <motion.span key={scenario} {...reveal(false)} className="font-mono font-medium text-teal">
+              {s.stockoutCut}
+            </motion.span>
+          </span>
         </motion.div>
       )}
 

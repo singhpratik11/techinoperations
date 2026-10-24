@@ -139,11 +139,12 @@ export const businessCase = {
   unit: '₹ lakh per store per year',
   steps: ['Recovered profit', 'Lower shrink', 'Less stock', 'Labour freed', 'Brand revenue', 'System cost'],
   netLabel: 'Net',
+  stockoutLabel: 'Stockouts cut by',
   scenarios: {
-    conservative: { label: 'Cautious', values: [6.0, 0, 4.2, 1.8, 0, -8.8], payback: '15 months' },
-    base: { label: 'Base', values: [15.0, 4.0, 4.2, 1.8, 7.0, -8.8], payback: '3 months' },
-    upside: { label: 'Optimistic', values: [18.0, 8.0, 4.2, 1.8, 14.0, -8.8], payback: '2 months' },
-  } as Record<ScenarioKey, { label: string; values: number[]; payback: string }>,
+    conservative: { label: 'Cautious', stockoutCut: '10%', values: [6.0, 0, 4.2, 1.8, 0, -8.8], payback: '15 months' },
+    base: { label: 'Base', stockoutCut: '25%', values: [15.0, 4.0, 4.2, 1.8, 7.0, -8.8], payback: '3 months' },
+    upside: { label: 'Optimistic', stockoutCut: '30%', values: [18.0, 8.0, 4.2, 1.8, 14.0, -8.8], payback: '2 months' },
+  } as Record<ScenarioKey, { label: string; stockoutCut: string; values: number[]; payback: string }>,
   order: ['conservative', 'base', 'upside'] as ScenarioKey[],
   paragraphs: [
     'For a store selling ₹100 crore a year, the system costs about ₹8.8 lakh a year.',
