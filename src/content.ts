@@ -156,7 +156,7 @@ export const businessCase = {
     { kind: 'step', text: 'Then sell shelf data and in-store media to brands: about 70% gross margin, against 5% net on groceries.' },
   ] as { kind: 'step' | 'gate'; text: string }[],
   source:
-    'Our model: stockouts cut 25%, 15% gross margin; costs are our estimates as vendors do not publish prices. Retail media margin: Coresight via BW Marketing World.',
+    'Our model: 15% gross margin; costs are our estimates as vendors do not publish prices. Retail media margin: Coresight via BW Marketing World.',
   notes:
     'Does it pay on a thin margin? The system costs ₹7 lakh of capex written off over three years plus ₹6.5 lakh a year to run. A store selling ₹100 crore keeps about ₹5 crore as profit. The system costs about ₹8.8 lakh a year. The biggest gain is recovered sales: cutting stockouts by a quarter brings back ₹15 lakh of gross profit. Add lower shrink, less safety stock, freed staff time and some brand money, and the store nets about ₹23 lakh a year, 4.6% more profit, with capex back in about three months. Even in the cautious case it still makes ₹3.2 lakh. Rollout: a five-store pilot against five matched stores, scale only if empty-shelf hours fall at least 15%, then sell shelf data and media to brands in year two. Across 400 such stores the base case is worth about ₹93 crore a year. The trap is over-automating: Amazon pulled Just Walk Out from its US Fresh grocery stores in 2024, so we keep people in charge and use cameras to direct them.',
 }
