@@ -28,7 +28,7 @@ export const technology = {
   },
   paragraphs: [
     'Point a camera at the fast-moving aisles. Most stores already have CCTV.',
-    'A detection model (YOLO) labels every spot as stocked, low or empty. It runs on a small box inside the store, so video never leaves.',
+    'A detection model (YOLO) labels every spot as stocked, low or empty. The images are captured and processed through in-store digital infrastructure.',
     'It starts rough and improves. Staff confirm each alert, and every answer becomes training data (the SOSA method).',
   ],
   notes:
