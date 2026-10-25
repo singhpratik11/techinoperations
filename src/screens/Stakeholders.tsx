@@ -24,7 +24,7 @@ export default function Stakeholders({ step, instant, enter }: ScreenProps) {
             <motion.div
               key={r.label}
               {...reveal(instant)}
-              className={`${COLS} items-center border-t border-hair py-[16px] font-sans text-[23px] leading-tight`}
+              className={`${COLS} items-center border-t border-hair py-[14px] font-sans text-[23px] leading-tight`}
             >
               <span className="font-semibold text-ink">{r.label}</span>
               <span className="pr-8 text-good">{r.gain}</span>
@@ -33,17 +33,18 @@ export default function Stakeholders({ step, instant, enter }: ScreenProps) {
           ) : null,
         )}
         {step > 0 && <div className="border-t border-hair" />}
+        {/* In the flow under the table, so two-line rows push these down instead of overlapping them. */}
+        {step > rows.length && (
+          <motion.p {...reveal(instant)} className="mt-7 mb-0 w-[1300px] font-sans text-[23px] leading-[1.45] text-ink">
+            {stakeholders.roles}
+          </motion.p>
+        )}
+        {step > rows.length + 1 && (
+          <motion.p {...reveal(instant)} className="mt-9 mb-0 font-serif text-[34px] text-teal italic">
+            {stakeholders.closing}
+          </motion.p>
+        )}
       </div>
-      {step > rows.length && (
-        <motion.p {...reveal(instant)} className="absolute top-[586px] left-[120px] m-0 w-[1300px] font-sans text-[23px] leading-[1.45] text-ink">
-          {stakeholders.roles}
-        </motion.p>
-      )}
-      {step > rows.length + 1 && (
-        <motion.p {...reveal(instant)} className="absolute top-[704px] left-[120px] m-0 font-serif text-[34px] text-teal italic">
-          {stakeholders.closing}
-        </motion.p>
-      )}
       <Source text={stakeholders.source} instant={instant} enter={enter + 0.4} />
     </div>
   )

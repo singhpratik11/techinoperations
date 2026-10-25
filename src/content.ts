@@ -96,13 +96,13 @@ export const stakeholders = {
   columns: ['What they gain', 'Condition for a win'],
   rows: [
     { label: 'Retailer', gain: 'recovered sales, accurate records, brand revenue', condition: 'start on fast-moving aisles, reuse existing CCTV' },
-    { label: 'Employees', gain: 'cameras do the looking, people the doing', condition: 'footage is never used for discipline' },
-    { label: 'Shoppers', gain: 'items on the shelf, shorter queues', condition: 'counts, not faces; clear signage' },
-    { label: 'Brands', gain: 'fewer lost sales, proof their products are on the shelf', condition: 'pay for measured results, not flat fees' },
+    { label: 'Employees', gain: 'Less manual checking; more time for replenishment and customer service', condition: 'footage is never used for discipline' },
+    { label: 'Shoppers', gain: 'Better product availability, potentially shorter queues', condition: 'counts, not faces; clear signage' },
+    { label: 'Brands', gain: 'Fewer lost sales; better visibility into product availability on shelves', condition: 'Pay for verified results, not flat fees' },
   ],
   roles:
-    "Auditor roles shrink; associates get tasks with location and quantity; merchandisers move from checking shelves to fixing them. Lowe's freed 80 staff hours per store a week and paid $5,000 bonuses from the gains.",
-  closing: 'It only works for everyone if the cameras watch shelves, not people.',
+    'Cameras identify stock issues; employees verify alerts, replenish shelves and resolve problems. Lowe’s reported saving 80 staff hours per store each week.',
+  closing: 'The goal: solve stock problems faster and create value for everyone.',
   source: "Tables D1 and D2; Lowe's via AI News. Brand losses: Gruen & Corsten via Drug Store News. Privacy: India's DPDP Act, 2023.",
   notes:
     "Is win-win-win-win possible? Yes, under two conditions: the gains are shared, and the cameras watch shelves rather than people. The retailer gains sales, accurate records and brand revenue. Employees lose drudgery and share bonuses. Shoppers find items and wait less, provided the system stores counts, not faces, which also keeps it within India's Digital Personal Data Protection Act, 2023. Brands are the least obvious winner and the most important for a thin-margin chain: out-of-stocks cost manufacturers about $23 million per $1 billion of sales, so a brand already paying for slotting and field merchandisers has reason to pay for proof that its products are on the shelf. On jobs: the cameras automate the looking and augment the doing. Auditor roles shrink; associates get tasks with location and quantity; merchandisers shift from checking shelves to fixing them. Lowe's freed 80 hours of staff time per store a week and paid store managers $5,000 bonuses from the gains. And the future: once every shelf is measured, the shelf can be sold. Onsite retail media earns about 70% gross margins against a 5% net margin on groceries, and Indian retail media, about ₹24,280 crore in 2025, is almost all online today.",
